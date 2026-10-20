@@ -10,6 +10,45 @@ This setup is separate from the one behind `e2e_dev` / `e2e_prod`
 (`ste2elearningkl` / `ac-e2e-learning` / `e2e_learning_cred` / `e2e_learning_uc`); see
 `databricks_end_to_end_project/docs/part9_cicd_plan.md` step A5.
 
+## Why Azure needs this and the AWS workspace doesn't
+
+The real difference isn't Azure versus AWS. It's **who owns the storage**.
+
+| | AWS workspace (`dbc-b5c9918e`, profile `DEFAULT`) | Azure workspace (`adb-7405618954475016`, profile `azure`) |
+|---|---|---|
+| Kind | Databricks **Free Edition** | Azure Databricks in **your own Azure subscription** |
+| Where table files live | Databricks' own cloud account (`s3://dbstorage-prod-…`) | Your subscription (`ste2elearningkl`, `stdablearningkl`, …) |
+| Who set up access to it | Databricks, before you signed up | You, with Steps 1–7 |
+| Metastore default storage | Provided by Databricks | None (`storage_root: None` on `metastore_azure_eastus2`) |
+| Creating a catalog | `databricks catalogs create <name>` | Must pass `--storage-root` under an external location |
+
+**On the Free Edition workspace**, Databricks hosts everything. Storage, compute and the metastore all run in
+Databricks' account, and the metastore comes with default storage already wired up. A new catalog without a
+location simply gets a folder in that default storage. There's no storage account for you to create and no
+identity for you to grant, so the Azure steps have nothing to apply to.
+
+**On the Azure workspace**, the data plane runs in *your* subscription. Databricks doesn't own your storage and has
+no access to it until you grant it. Unity Catalog needs three things before it can write a table there:
+
+1. **Somewhere to write.** A storage account in your subscription (Steps 1–3).
+2. **An identity allowed to write there.** The access connector plus a role assignment (Steps 4–5). Unity Catalog
+   uses this identity, not your personal login, so access keeps working for jobs, pipelines and other users.
+3. **A Unity Catalog record of that permission.** The storage credential and external location (Steps 6–7).
+   UC only allows paths covered by an external location, which keeps users from pointing tables at arbitrary storage.
+
+Your metastore was created without a metastore-level storage root, so there's no fallback. Every catalog must name
+its own location (Step 8). Newer Azure metastores can be given a default root, and the auto-created `e2e_learning`
+catalog does use workspace-managed storage, but catalogs you create yourself still need a location.
+
+**A paid AWS workspace would need the same chain.** It's only Free Edition that skips it. The pieces map one to one:
+
+| Azure | AWS equivalent |
+|---|---|
+| Storage account + container (ADLS Gen2) | S3 bucket |
+| Access connector (managed identity) | IAM role with a trust policy for Unity Catalog |
+| Storage Blob Data Contributor role assignment | IAM policy granting S3 read/write on the bucket |
+| Storage credential, external location, catalog | Same in both clouds |
+
 ## The chain
 
 ```
@@ -158,7 +197,8 @@ databricks bundle validate --strict --target azure-dev
 
 ## AWS (DEFAULT profile)
 
-None of the above applies. The Free Edition workspace uses Databricks-managed default storage:
+None of the above applies; see [Why Azure needs this and the AWS workspace doesn't](#why-azure-needs-this-and-the-aws-workspace-doesnt).
+The Free Edition workspace uses Databricks-managed default storage:
 
 ```powershell
 databricks catalogs create dab_dev  --profile DEFAULT
