@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "main.py (Databricks Connect)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/dab/main.py",
+            "args": ["--catalog", "dab_dev", "--schema", "dev_keqingli1129_dab"],
+            "envFile": "${workspaceFolder}/.databricks/.databricks.env",
+            "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Current file (Databricks Connect)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "envFile": "${workspaceFolder}/.databricks/.databricks.env",
+            "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
