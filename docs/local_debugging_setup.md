@@ -236,7 +236,7 @@ the Spark session.
 
 ## Schema names
 
-The bundle creates the schema it writes to (`resources/dab.schema.yml`), and the job and pipeline reference it as
+The bundle creates the schema it writes to (`resources/dab.schemas.yml`), and the job and pipeline reference it as
 `${resources.schemas.dab_schema.name}`.
 
 | Target | Schema |
