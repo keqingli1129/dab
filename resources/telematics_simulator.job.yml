@@ -1,0 +1,54 @@
+# Sends fake telematics events to Kafka or to the landing volume.
+# Run it manually, overriding parameters as needed, e.g.:
+#   databricks bundle run telematics_simulator --params sink=files,count=50
+
+resources:
+  jobs:
+    telematics_simulator:
+      name: telematics_simulator
+
+      parameters:
+        # "kafka" produces to the topic; "files" writes JSON files into the landing volume.
+        - name: sink
+          default: kafka
+        - name: count
+          default: "20"
+        # Seconds between events.
+        - name: interval
+          default: "3"
+        - name: topic
+          default: telematics
+        # Secret scope holding bootstrap_servers / api_key / api_secret (only used with sink=kafka).
+        - name: secret_scope
+          default: kafka_dev
+        # Volume folder for sink=files.
+        - name: landing_path
+          default: /Volumes/${var.catalog}/${resources.schemas.landing_schema.name}/${resources.volumes.telematics_landing.name}
+
+      tasks:
+        - task_key: send_events
+          python_wheel_task:
+            package_name: dab
+            entry_point: telematics_simulator
+            parameters:
+              - "--sink"
+              - "{{job.parameters.sink}}"
+              - "--count"
+              - "{{job.parameters.count}}"
+              - "--interval"
+              - "{{job.parameters.interval}}"
+              - "--topic"
+              - "{{job.parameters.topic}}"
+              - "--secret-scope"
+              - "{{job.parameters.secret_scope}}"
+              - "--landing-path"
+              - "{{job.parameters.landing_path}}"
+          environment_key: default
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
+            dependencies:
+              # The dab wheel; it pulls in confluent-kafka as a dependency.
+              - ../dist/*.whl

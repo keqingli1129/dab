@@ -1,4 +1,4 @@
-# The schemas this bundle creates on deploy.
+# The schemas and volumes this bundle creates on deploy.
 
 resources:
   schemas:
@@ -28,3 +28,13 @@ resources:
       catalog_name: ${var.catalog}
       name: gold
       comment: Business-level aggregates for reporting
+
+  volumes:
+    # Where the telematics simulator writes JSON files when run with --sink files.
+    # Path: /Volumes/<catalog>/<landing schema>/telematics
+    telematics_landing:
+      catalog_name: ${var.catalog}
+      schema_name: ${resources.schemas.landing_schema.name}
+      name: telematics
+      volume_type: MANAGED
+      comment: Raw telematics events as JSON files, one file per event

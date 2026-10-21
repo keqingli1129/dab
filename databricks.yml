@@ -12,6 +12,11 @@ artifacts:
     type: whl
     build: uv build --wheel
 
+# Applied to every target. Tags make this bundle's jobs and pipelines easy to filter in the UI.
+presets:
+  tags:
+    project: dab
+
 # Variable declarations. These variables are assigned in the dev/prod targets below.
 variables:
   catalog:

@@ -9,6 +9,7 @@ dependencies = [
     #
     # LIMITATION: for pipelines, dependencies are cached during development;
     # add dependencies to the 'environment' section of your pipeline.yml file instead
+    "confluent-kafka>=2.16.0",
 ]
 
 [dependency-groups]
@@ -22,6 +23,7 @@ dev = [
 
 [project.scripts]
 main = "dab.main:main"
+telematics_simulator = "dab.telematics.simulator:main"
 
 [build-system]
 requires = ["hatchling"]
