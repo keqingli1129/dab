@@ -31,7 +31,7 @@ targets:
       host: https://dbc-b5c9918e-c2d2.cloud.databricks.com
     variables:
       catalog: dab_dev
-      schema: ${workspace.current_user.short_name}
+      schema: dab
   prod:
     mode: production
     workspace:
@@ -53,7 +53,7 @@ targets:
       profile: azure
     variables:
       catalog: dab_dev
-      schema: ${workspace.current_user.short_name}
+      schema: dab
   azure-prod:
     mode: production
     workspace:

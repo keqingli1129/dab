@@ -1,0 +1,8 @@
+# The schema that the job and pipeline write to; created on deploy.
+
+resources:
+  schemas:
+    dab_schema:
+      catalog_name: ${var.catalog}
+      name: ${var.schema}
+      comment: Schema for the dab bundle

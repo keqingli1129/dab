@@ -5,7 +5,7 @@ resources:
     dab_etl:
       name: dab_etl
       catalog: ${var.catalog}
-      schema: ${var.schema}
+      schema: ${resources.schemas.dab_schema.name}
       serverless: true
       root_path: "../src/dab_etl"
 
