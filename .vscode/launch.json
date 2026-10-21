@@ -8,7 +8,12 @@
             "program": "${workspaceFolder}/src/dab/main.py",
             "args": ["--catalog", "dab_dev", "--schema", "dev_keqingli1129_dab"],
             "envFile": "${workspaceFolder}/.databricks/.databricks.env",
-            "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "REQUESTS_CA_BUNDLE": "${userHome}/.certs/ca-bundle.pem",
+                "SSL_CERT_FILE": "${userHome}/.certs/ca-bundle.pem",
+                "GRPC_DEFAULT_SSL_ROOTS_FILE_PATH": "${userHome}/.certs/ca-bundle.pem"
+            },  
             "console": "integratedTerminal",
             "justMyCode": true
         },
@@ -18,7 +23,12 @@
             "request": "launch",
             "program": "${file}",
             "envFile": "${workspaceFolder}/.databricks/.databricks.env",
-            "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "REQUESTS_CA_BUNDLE": "${userHome}/.certs/ca-bundle.pem",
+                "SSL_CERT_FILE": "${userHome}/.certs/ca-bundle.pem",
+                "GRPC_DEFAULT_SSL_ROOTS_FILE_PATH": "${userHome}/.certs/ca-bundle.pem"
+            }, 
             "console": "integratedTerminal",
             "justMyCode": true
         }

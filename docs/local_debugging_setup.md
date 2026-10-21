@@ -88,7 +88,34 @@ $b = "$HOME\.certs\ca-bundle.pem"
 **1c. Quit VS Code completely and reopen it.** It reads environment variables only at startup; Reload Window isn't
 enough.
 
-**Check it worked:**
+**Alternative to 1b and 1c: limit it to this project.** User environment variables apply to every program you
+start. The bundle is a superset of Python's default list and only adds a root Windows already trusts, so this is
+normally harmless (and it fixes other Python tools on this network). If you'd still rather not change anything
+machine-wide, skip 1b and 1c, and add the variables to the `"env"` block of both configurations in
+`.vscode/launch.json` (Step 4):
+
+```json
+"env": {
+    "PYTHONPATH": "${workspaceFolder}/src",
+    "REQUESTS_CA_BUNDLE": "${userHome}/.certs/ca-bundle.pem",
+    "SSL_CERT_FILE": "${userHome}/.certs/ca-bundle.pem",
+    "GRPC_DEFAULT_SSL_ROOTS_FILE_PATH": "${userHome}/.certs/ca-bundle.pem"
+}
+```
+
+`launch.json` is read on every launch, so no restart is needed. The trade-off:
+
+| | Machine-wide (1b) | Project-only (`launch.json`) |
+|---|---|---|
+| Debugging this project (F5) | Works | Works |
+| Testing panel, `uv run pytest` | Works | Still hangs |
+| Databricks Connect in other projects | Works | Still hangs |
+| Other Python apps | Use the bundle | Unchanged |
+
+Either way, keep `~\.certs\ca-bundle.pem` where it is. If it's moved or deleted, anything pointed at it fails its
+HTTPS calls.
+
+**Check it worked** (machine-wide setup only; with the project-only setup, F5 reaching your breakpoint is the check):
 
 ```powershell
 .\.venv\Scripts\python.exe -c "import requests; print(requests.get('https://adb-7405618954475016.16.azuredatabricks.net/.well-known/databricks-config').status_code)"
@@ -173,6 +200,8 @@ with:
   `dev_<short_name>_dab` is the dev schema the bundle creates; see "Schema names" below.
 - `envFile` passes the extension's sign-in and serverless settings to the debugger. The extension rewrites that file
   when it restarts, so keep the extension open and showing ready while you debug.
+- If you chose the project-only certificate setup in Step 1, add the three certificate variables to `env` in both
+  configurations.
 
 ## Step 5: Debug
 
