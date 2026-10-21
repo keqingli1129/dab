@@ -197,7 +197,7 @@ hand. Job parameters map to the flags:
 | `count` | `20` | `--count` |
 | `interval` | `3` | `--interval` |
 | `topic` | `telematics` | `--topic` |
-| `secret_scope` | `kafka_dev` | `--secret-scope` |
+| `secret_scope` | Bundle variable `kafka_secret_scope`, `kafka_azure_dev` unless a target overrides it | `--secret-scope` |
 | `landing_path` | The `telematics` volume in the landing schema | `--landing-path` |
 
 ```bash

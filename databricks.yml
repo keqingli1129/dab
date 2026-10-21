@@ -23,6 +23,9 @@ variables:
     description: The catalog to use
   schema:
     description: The schema to use
+  kafka_secret_scope:
+    description: Secret scope holding bootstrap_servers / api_key / api_secret for Confluent Kafka
+    default: kafka_azure_dev
 
 targets:
   dev:
@@ -37,6 +40,7 @@ targets:
     variables:
       catalog: dab_dev
       schema: dab
+      kafka_secret_scope: kafka_dev
   prod:
     mode: production
     workspace:
@@ -46,6 +50,7 @@ targets:
     variables:
       catalog: dab_prod
       schema: prod
+      kafka_secret_scope: kafka_dev
     permissions:
       - user_name: keqingli1129@gmail.com
         level: CAN_MANAGE

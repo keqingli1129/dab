@@ -20,7 +20,7 @@ resources:
           default: telematics
         # Secret scope holding bootstrap_servers / api_key / api_secret (only used with sink=kafka).
         - name: secret_scope
-          default: kafka_dev
+          default: ${var.kafka_secret_scope}
         # Volume folder for sink=files.
         - name: landing_path
           default: /Volumes/${var.catalog}/${resources.schemas.landing_schema.name}/${resources.volumes.telematics_landing.name}
