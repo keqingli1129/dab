@@ -160,8 +160,14 @@ Remove-Item cred.json
 
 The JSON goes through a file because Windows PowerShell 5.1 mangles quotes in inline JSON passed to native programs.
 
-UI: Catalog → **External data** → Credentials → Create credential → Azure Managed Identity →
-paste the access connector's resource ID (`$acId`).
+UI: click **Catalog** in the sidebar, then open the external data page. The UI has moved between versions, so look for
+whichever of these you have:
+
+- the **plug icon / Connect** button → **Credentials**
+- the **External data >** button (Quick access page) → **Credentials** tab
+- the **+** button → **Create a credential**
+
+Then: Create credential → type **Azure Managed Identity** → paste the access connector's resource ID (`$acId`).
 
 ## Step 7: External location (Unity Catalog)
 
@@ -172,7 +178,10 @@ databricks external-locations create dab_uc "abfss://$cont@$sa.dfs.core.windows.
 
 Creating it runs a test read and write. If it succeeds, Steps 2–6 are wired up correctly.
 
-UI: Catalog → External data → External locations → Create.
+UI: **Catalog** → **Connect** (plug icon) → **External locations** → **Create external location**. On other UI
+versions it's **External data >** → **External Locations** tab, or **+** → **Create an external location**.
+Choose **Manual** if asked, storage type **Azure**, URL `abfss://dab@<storage account>.dfs.core.windows.net/`,
+storage credential `dab_cred`. After creating it, click **Test connection** to check read/list/write access.
 
 ## Step 8: Catalogs
 
