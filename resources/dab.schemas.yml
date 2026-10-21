@@ -1,0 +1,30 @@
+# The schemas this bundle creates on deploy.
+
+resources:
+  schemas:
+    # The schema that the job and pipeline write to.
+    dab_schema:
+      catalog_name: ${var.catalog}
+      name: ${var.schema}
+      comment: Schema for the dab bundle
+
+    # Medallion layers. In development mode the bundle prefixes these names with dev_<short_name>_.
+    landing_schema:
+      catalog_name: ${var.catalog}
+      name: landing
+      comment: Raw files as they arrive (volumes), before any processing
+
+    bronze_schema:
+      catalog_name: ${var.catalog}
+      name: bronze
+      comment: Raw records ingested as-is, all fields as strings, with source metadata
+
+    silver_schema:
+      catalog_name: ${var.catalog}
+      name: silver
+      comment: Cleaned, typed and de-duplicated records
+
+    gold_schema:
+      catalog_name: ${var.catalog}
+      name: gold
+      comment: Business-level aggregates for reporting

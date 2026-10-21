@@ -56,6 +56,9 @@ targets:
       schema: dab
   azure-prod:
     mode: production
+    # Keep job schedules paused until we're ready to run in prod; remove to enable them.
+    presets:
+      trigger_pause_status: PAUSED
     workspace:
       host: https://adb-7405618954475016.16.azuredatabricks.net
       profile: azure
